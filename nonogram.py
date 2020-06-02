@@ -6,14 +6,6 @@
 
 import copy
 
-# 10 x 10 game
-x = [[1], [1, 3, 3], [2, 7], [2, 3], [2, 7], [1, 8], [5, 4], [3], [1], [2]]
-y = [[6], [3, 1], [1, 2], [2, 3], [6], [4], [5], [2, 4], [2, 4, 1], [3, 6]]
-
-# 15 x 15 game
-x1 = [[3, 2, 1], [3, 1, 1, 1], [2, 1, 2, 2], [3, 5, 1], [3, 1, 1, 1], [1, 3, 2, 2], [2, 6, 1], [1, 3, 1, 1], [1, 2, 3, 3], [1, 3, 8], [2, 1, 8], [1, 5, 3], [2, 2, 3], [4, 3], [6]]
-y1 = [[5], [3, 3], [2, 2], [3, 3, 1], [3, 2, 2], [2, 1, 1, 4], [2, 2, 1, 1], [1, 2, 3, 4, 1], [1, 7, 1], [14], [1, 2, 2, 3, 2], [1, 1, 1, 2, 1], [2, 2, 5], [1, 1, 4], [2, 2, 6]]
-
 class NonogramSolver(object):
 
 	def __init__(self, x, y):
@@ -79,10 +71,16 @@ class NonogramSolver(object):
 			x_commons[i] = self.find_common(self.x_combo[i])
 			y_commons[i] = self.find_common(self.y_combo[i])
 
-		self.update_board(x_commons, y_commons)
-		self.update_combos()
+		# update board
+		for i in range(self.dim):
+			for j in range(self.dim):
 
-	def update_combos(self):
+				x = x_commons[i][j]
+				y = y_commons[j][i]
+
+				self.board[i][j] = 0 if x + y == 0 else (x or y)
+		
+		# update combos
 		update_x_combos = [0] * self.dim
 		update_y_combos = [0] * self.dim
 
@@ -91,10 +89,10 @@ class NonogramSolver(object):
 			y_indx_combos = []
 
 			for perm in self.x_combo[indx]:
-				if self.is_valid(indx, True, perm):
+				if self.fits_on_board(indx, True, perm):
 					x_indx_combos += [perm]
 			for perm in self.y_combo[indx]:
-				if self.is_valid(indx, False, perm):
+				if self.fits_on_board(indx, False, perm):
 					y_indx_combos += [perm]
 
 			update_x_combos[indx] = x_indx_combos
@@ -103,7 +101,7 @@ class NonogramSolver(object):
 		self.x_combo = update_x_combos
 		self.y_combo = update_y_combos
 
-	def is_valid(self, i, is_row, r):
+	def fits_on_board(self, i, is_row, r):
 		for j in range(self.dim):
 			if is_row:
 				if self.board[i][j] == 0 : continue
@@ -113,15 +111,6 @@ class NonogramSolver(object):
 				if self.board[j][i] != r[j]: return False
 
 		return True
-
-	def update_board(self, x_commons, y_commons):
-		for i in range(self.dim):
-			for j in range(self.dim):
-
-				x = x_commons[i][j]
-				y = y_commons[j][i]
-
-				self.board[i][j] = 0 if x + y == 0 else (x or y)
 
 	def find_common(self, combos):
 		common = [0] * len(combos[0])
@@ -163,6 +152,14 @@ class NonogramSolver(object):
 			return 'x'
 		else:
 			return 'o'
+
+# 10 x 10 game
+x = [[1], [1, 3, 3], [2, 7], [2, 3], [2, 7], [1, 8], [5, 4], [3], [1], [2]]
+y = [[6], [3, 1], [1, 2], [2, 3], [6], [4], [5], [2, 4], [2, 4, 1], [3, 6]]
+
+# 15 x 15 game
+x1 = [[3, 2, 1], [3, 1, 1, 1], [2, 1, 2, 2], [3, 5, 1], [3, 1, 1, 1], [1, 3, 2, 2], [2, 6, 1], [1, 3, 1, 1], [1, 2, 3, 3], [1, 3, 8], [2, 1, 8], [1, 5, 3], [2, 2, 3], [4, 3], [6]]
+y1 = [[5], [3, 3], [2, 2], [3, 3, 1], [3, 2, 2], [2, 1, 1, 4], [2, 2, 1, 1], [1, 2, 3, 4, 1], [1, 7, 1], [14], [1, 2, 2, 3, 2], [1, 1, 1, 2, 1], [2, 2, 5], [1, 1, 4], [2, 2, 6]]
 
 NonogramSolver(x1, y1).solve()
 
