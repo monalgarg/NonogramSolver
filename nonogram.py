@@ -60,7 +60,7 @@ class NonogramSolver(object):
 				self.print_board()
 				print(('-' * (self.dim + int(self.dim/5))))
 
-		print('solved! cycles took: ', count)
+		print('solved! cycles: ', count)
 		self.print_board()
 
 	def reduce(self):
