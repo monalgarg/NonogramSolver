@@ -64,6 +64,8 @@ class NonogramSolver(object):
 		self.print_board()
 
 	def reduce(self):
+		self.update_combos()
+
 		x_commons = [0] * self.dim
 		y_commons = [0] * self.dim
 
@@ -71,7 +73,9 @@ class NonogramSolver(object):
 			x_commons[i] = self.find_common(self.x_combo[i])
 			y_commons[i] = self.find_common(self.y_combo[i])
 
-		# update board
+		self.update_board(x_commons, y_commons)
+
+	def update_board(self, x_commons, y_commons):
 		for i in range(self.dim):
 			for j in range(self.dim):
 
@@ -80,7 +84,7 @@ class NonogramSolver(object):
 
 				self.board[i][j] = 0 if x + y == 0 else (x or y)
 		
-		# update combos
+	def update_combos(self):
 		update_x_combos = [0] * self.dim
 		update_y_combos = [0] * self.dim
 
@@ -133,6 +137,7 @@ class NonogramSolver(object):
 		for i in range(self.dim):
 			if len(self.x_combo[i]) != 1 or len(self.y_combo[i]) != 1:
 				return False
+		
 		return True
 
 	def print_board(self):
@@ -161,5 +166,8 @@ y = [[6], [3, 1], [1, 2], [2, 3], [6], [4], [5], [2, 4], [2, 4, 1], [3, 6]]
 x1 = [[3, 2, 1], [3, 1, 1, 1], [2, 1, 2, 2], [3, 5, 1], [3, 1, 1, 1], [1, 3, 2, 2], [2, 6, 1], [1, 3, 1, 1], [1, 2, 3, 3], [1, 3, 8], [2, 1, 8], [1, 5, 3], [2, 2, 3], [4, 3], [6]]
 y1 = [[5], [3, 3], [2, 2], [3, 3, 1], [3, 2, 2], [2, 1, 1, 4], [2, 2, 1, 1], [1, 2, 3, 4, 1], [1, 7, 1], [14], [1, 2, 2, 3, 2], [1, 1, 1, 2, 1], [2, 2, 5], [1, 1, 4], [2, 2, 6]]
 
-NonogramSolver(x1, y1).solve()
+x2 = [[6], [8], [3, 2], [2, 1], [3, 1], [3, 1], [8, 2], [9], [7, 1], [4, 3], [5, 2], [2, 2, 2], [2, 3], [7], [4]]
+y2 = [[4], [7], [4, 2], [5, 2], [3, 2, 2], [3, 4], [4, 3], [4, 2, 5], [12], [3, 4], [2, 2], [2], [2], [3, 1], [6]]
+
+NonogramSolver(x2, y2).solve()
 
